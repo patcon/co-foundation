@@ -93,6 +93,7 @@ const HelpTooltip = props => {
 
 function App() {
   const DEFAULT_PROVINCE = 'on'
+  const AVAILABLE_PROVINCES = ['ab', 'bc', 'on']
 
   const [ currentStep, setCurrentStep ] = useState('1-start')
   const [ province, setProvince ] = useState(DEFAULT_PROVINCE)
@@ -103,6 +104,14 @@ function App() {
 
   const handleProvinceChange = (e) => {
     setProvince(e.target.value)
+  }
+
+  const handleProvinceNext = () => {
+    if (AVAILABLE_PROVINCES.indexOf(province) > -1) {
+      handleGoTo('3-new-or-existing')
+    } else {
+      handleGoTo('0-unavailable-canada')
+    }
   }
 
   return (
@@ -157,7 +166,7 @@ function App() {
             <option value="yk">Yukon</option>
           </Select>
         </Pane>
-        <Button appearance="primary" onClick={() => handleGoTo('3-new-or-existing')}>Next</Button>
+        <Button appearance="primary" onClick={() => handleProvinceNext()}>Next</Button>
       </WizardStep>
       <WizardStep
         step="0-unavailable-canada"
