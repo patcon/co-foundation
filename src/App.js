@@ -8,6 +8,7 @@ import {
   Pane,
   Paragraph,
   Pill,
+  SearchIcon,
   Select,
   Text,
   TextInput,
@@ -19,7 +20,7 @@ const CountryButton = props => {
   const { onClick, flag, name } = props
 
   return (
-    <Button onClick={onClick} height={majorScale(8)} paddingX={majorScale(1)}>
+    <Button onClick={onClick} height={majorScale(8)} paddingX={majorScale(1)} marginRight={majorScale(3)}>
       <Text width="100px">
         <Text fontSize={majorScale(3)}>{ flag }</Text><br />
         <Text fontWeight="600">{ name }</Text>
@@ -28,8 +29,13 @@ const CountryButton = props => {
   )
 }
 
-const BackButton = () => (
-  <IconButton icon={ChevronLeftIcon} height={majorScale(4)} borderRadius={majorScale(2)} />
+const BackButton = ({ onClick }) => (
+  <IconButton
+    onClick={onClick}
+    icon={ChevronLeftIcon}
+    height={majorScale(4)}
+    borderRadius={majorScale(2)}
+  />
 )
 
 const EmailInputField = () => (
@@ -40,7 +46,14 @@ const EmailInputField = () => (
 )
 
 const WizardStep = props => {
-  const { onBack, currentStep, step, children } = props
+  const {
+    onBack,
+    currentStep,
+    step,
+    heading,
+    text,
+    children,
+  } = props
   if (currentStep !== step) {
     return null
   }
@@ -51,121 +64,163 @@ const WizardStep = props => {
         { step === 1 ? null : <BackButton onClick={onBack} /> }
       </Pane>
       <Pane>
-        { children }
+        <Heading marginBottom={majorScale(5)}>{heading}</Heading>
+        { text ? <Paragraph marginBottom={majorScale(6)}>{text}</Paragraph> : null }
+        <Pane display="block">
+          { children }
+        </Pane>
       </Pane>
     </Pane>
   )
 }
 
+const HelpTooltip = props => {
+  const { text } = props
+
+  return (
+    <Tooltip
+      appearance="card"
+      content={
+        <Pane margin={majorScale(2)}>
+            <Paragraph>{text}</Paragraph>
+            <Button as="a" href="#">Read More</Button>
+        </Pane>
+      }>
+      <Pill display="inline-flex" margin={majorScale(1)}>?</Pill>
+    </Tooltip>
+  )
+}
+
 function App() {
-  const [ currentStep, setCurrentStep ] = useState(1)
+  const [ currentStep, setCurrentStep ] = useState('1-start')
 
-  const handleNext = () => {
-    setCurrentStep(currentStep + 1)
-  }
-
-  const handleBack = () => {
-    setCurrentStep(currentStep - 1)
+  const handleGoTo = (stepName) => {
+    setCurrentStep(stepName)
   }
 
   return (
     <>
-      <WizardStep step={1} currentStep={currentStep} onBack={handleBack}>
-        <Heading>Country</Heading>
-        <Text>Where is your business located?</Text>
+      <WizardStep
+        step="1-start"
+        heading="Country"
+        text="Where is your business located?"
+        currentStep={currentStep}
+      >
+        <CountryButton flag="🇨🇦" name="Canada"
+          onClick={() => handleGoTo('2-pick-province')} />
+        <CountryButton flag="🇺🇸" name="United States"
+          onClick={() => handleGoTo('0-unavailable-usa')} />
+      </WizardStep>
+      <WizardStep
+        step="0-unavailable-usa"
+        heading="Come Back Soon"
+        text="Founded is only available for Canadian companies at this time.
+          Leave us your email and we will update you once we launch
+          in the US."
+        currentStep={currentStep}
+        onBack={() => handleGoTo('1-start')}
+      >
+        <EmailInputField />
+        <Button appearance="primary">Send</Button>
+      </WizardStep>
+      <WizardStep
+        step="2-pick-province"
+        heading="Province"
+        currentStep={currentStep}
+        onBack={() => handleGoTo('1-start')}
+      >
         <Pane>
-          <CountryButton flag="🇨🇦" name="Canada" onClick={handleNext} />
-          <CountryButton flag="🇺🇸" name="United States" />
+          <Text>This company will be located in</Text>
+          <Select marginLeft={majorScale(1)} defaultValue="on">
+            <option value="ab">Alberta</option>
+            <option value="bc">British Columbia</option>
+            <option value="mb">Manitoba</option>
+            <option value="nb">New Brunswick</option>
+            <option value="nl">Newfoundland and Labrador</option>
+            <option value="nw">Northwest Territories</option>
+            <option value="ns">Nove Scotia</option>
+            <option value="nu">Nunavut</option>
+            <option value="on">Ontario</option>
+            <option value="pe">Prince Edward Island</option>
+            <option value="pq">Quebec</option>
+            <option value="sk">Saskatchewan</option>
+            <option value="yk">Yukon</option>
+          </Select>
         </Pane>
+        <Button appearance="primary" onClick={() => handleGoTo('3-new-or-existing')}>Next</Button>
       </WizardStep>
-      <WizardStep currentStep={currentStep} onBack={handleBack}>
-        <Heading>Come Back Soon</Heading>
-        <Text>Founded is only available for Canadian companies at this time. Leave us your email and we will update you once we launch in the US.</Text>
+      <WizardStep
+        step="0-unavailable-canada"
+        header="Come Back Soon"
+        text="Founded is not currently available in your province, at this time.
+          Leave us your email and we will update you once we launch
+          in your province."
+        currentStep={currentStep}
+        onBack={() => handleGoTo('2-pick-province')}
+      >
         <EmailInputField />
-        <Button>Send</Button>
+        <Button appearance="primary">Send</Button>
       </WizardStep>
-      <WizardStep step={2} currentStep={currentStep} onBack={handleBack}>
-        <Heading>Province</Heading>
-        <Text>This company will be located in</Text>
-        <Select defaultValue="on">
-          <option value="ab">Alberta</option>
-          <option value="bc">British Columbia</option>
-          <option value="mb">Manitoba</option>
-          <option value="nb">New Brunswick</option>
-          <option value="nl">Newfoundland and Labrador</option>
-          <option value="nw">Northwest Territories</option>
-          <option value="ns">Nove Scotia</option>
-          <option value="nu">Nunavut</option>
-          <option value="on">Ontario</option>
-          <option value="pe">Prince Edward Island</option>
-          <option value="pq">Quebec</option>
-          <option value="sk">Saskatchewan</option>
-          <option value="yk">Yukon</option>
-        </Select>
-        <Button onClick={handleNext}>Next</Button>
+      <WizardStep
+        step="3-new-or-existing"
+        heading="Business State"
+        text="Are you incorporating a new business or onboarding an existing one?"
+        currentStep={currentStep}
+        onBack={() => handleGoTo('2-pick-province')}
+      >
+        <Button onClick={() => handleGoTo('4-new')}>New</Button>
+        <Button marginLeft={majorScale(3)} onClick={() => handleGoTo('4-existing')}>Existing</Button>
       </WizardStep>
-      <WizardStep currentStep={currentStep} onBack={handleBack}>
-        <Heading>Come Back Soon</Heading>
-        <Text>Founded is not currently available in your province, at this time. Leave us your email and we will update you once we launch in your province.</Text>
-        <EmailInputField />
-        <Button>Send</Button>
+      <WizardStep
+        step="4-new"
+        heading="About your company"
+        currentStep={currentStep}
+        onBack={() => handleGoTo('3-new-or-existing')}
+      >
+        <Pane>
+          <Text>I want a</Text>
+          <Select marginX={majorScale(1)}>
+            <option value="named">Named</option>
+            <option value="numbered">Numbered</option>
+          </Select>
+          <Text>company</Text>
+          <HelpTooltip
+            text="Both named and numbered companies are legal.
+            A numbered company may be required to register its
+            operating name in certain circumstances."
+            />
+        </Pane>
+        <Pane display="flex" alignItems="center">
+          <Text>My company will be called</Text>
+          <TextInput
+            marginLeft={majorScale(1)}
+            placeholder="Company Name" />
+          <Select marginLeft={majorScale(1)}>
+            <option value="inc">Inc.</option>
+            <option value="ltd">Ltd.</option>
+            <option value="corp">Corp.</option>
+            <option value="limited">Limited</option>
+          </Select>
+          <HelpTooltip
+            text="Your corporate name requires a legal ending (like Inc. or Ltd.).
+            The ending has no legal consequences.
+            You can choose whichever you prefer."
+            />
+        </Pane>
+        <Button appearance="primary" onClick={null}>Submit</Button>
       </WizardStep>
-      <WizardStep step={3} currentStep={currentStep} onBack={handleBack}>
-        <Heading>Business State</Heading>
-        <Text>Are you incorporating a new business or onboarding an existing one?</Text>
-        <Button onClick={handleNext}>New</Button>
-        <Button onClick={handleNext}>Existing</Button>
-      </WizardStep>
-      <WizardStep step={4} currentStep={currentStep} onBack={handleBack}>
-        <Heading>About your company</Heading>
-        <Text>I want a</Text>
-        <Select>
-          <option value="named">Named</option>
-          <option value="numbered">Numbered</option>
-        </Select>
-        <Text>company</Text>
-        <Tooltip
-          appearance="card"
-          content={
-            <Pane margin={majorScale(2)}>
-                <Paragraph>
-                Both named and numbered companies are legal. A numbered company may be required to register its operating name in certain circumstances.
-                </Paragraph>
-                <Button>Read More</Button>
-            </Pane>
-          }>
-          <Pill display="inline-flex" margin={majorScale(1)}>?</Pill>
-        </Tooltip>
-        <Text>My company will be called</Text>
+      <WizardStep
+        step="4-existing"
+        heading="Company Search"
+        currentStep={currentStep}
+        onBack={() => handleGoTo('3-new-or-existing')}
+      >
+        <Text marginRight={majorScale(1)}>My company is called</Text>
         <TextInput
-          placeholder="Company Name" />
-        <Select>
-          <option value="inc">Inc.</option>
-          <option value="ltd">Ltd.</option>
-          <option value="corp">Corp.</option>
-          <option value="limited">Limited</option>
-        </Select>
-        <Tooltip
-          appearance="card"
-          content={
-            <Pane margin={majorScale(2)}>
-                <Paragraph>
-                  Your corporate name requires a legal ending (like Inc. or Ltd.). The ending has no legal consequences. You can choose whichever you prefer.
-                </Paragraph>
-                <Button>Read More</Button>
-            </Pane>
-          }>
-          <Pill display="inline-flex" margin={majorScale(1)}>?</Pill>
-        </Tooltip>
-        <Button onClick={handleNext}>Submit</Button>
-      </WizardStep>
-      <WizardStep step={5} currentStep={currentStep} onBack={handleBack}>
-        <Heading>Company Search</Heading>
-        <Text>My company is called</Text>
-        <TextInput
+          marginRight={majorScale(1)}
           placeholder="Company Name or Number"
           />
-        <Button onClick={handleNext}>Search</Button>
+        <Button iconBefore={SearchIcon} onClick={null}>Search</Button>
       </WizardStep>
     </>
   )
