@@ -130,7 +130,7 @@ function App() {
       <WizardStep
         step="0-unavailable-usa"
         heading="Come Back Soon"
-        text="Founded is only available for Canadian companies at this time.
+        text="<Service Name> is only available for Canadian companies at this time.
           Leave us your email and we will update you once we launch
           in the US."
         currentStep={currentStep}
@@ -171,7 +171,7 @@ function App() {
       <WizardStep
         step="0-unavailable-canada"
         header="Come Back Soon"
-        text="Founded is not currently available in your province, at this time.
+        text="<Service Name> is not currently available in your province, at this time.
           Leave us your email and we will update you once we launch
           in your province."
         currentStep={currentStep}
