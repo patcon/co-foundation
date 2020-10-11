@@ -30,7 +30,6 @@ const CountryButton = props => {
 }
 
 const BackButton = props => {
-  const { onClick } = props
   return (
     <IconButton
     { ...props }
@@ -57,12 +56,13 @@ const WizardStep = props => {
     text,
     children,
   } = props
+
   if (currentStep !== step) {
     return null
   }
 
   return (
-    <Pane display="flex" flexDirection="row">
+    <Pane paddingTop={majorScale(2)} display="flex" flexDirection="row">
       <Pane width={100} display="block">
         { step === '1-start' ? null : <BackButton marginRight={majorScale(2)} float="right" onClick={onBack} /> }
       </Pane>
@@ -182,7 +182,7 @@ function App() {
       </WizardStep>
       <WizardStep
         step="0-unavailable-canada"
-        header="Come Back Soon"
+        heading="Come Back Soon"
         text="<THIS PLATFORM> is not currently available in your province, at this time.
           Leave us your email and we will update you once we launch
           in your province."
