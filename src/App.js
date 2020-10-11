@@ -92,10 +92,17 @@ const HelpTooltip = props => {
 }
 
 function App() {
+  const DEFAULT_PROVINCE = 'on'
+
   const [ currentStep, setCurrentStep ] = useState('1-start')
+  const [ province, setProvince ] = useState(DEFAULT_PROVINCE)
 
   const handleGoTo = (stepName) => {
     setCurrentStep(stepName)
+  }
+
+  const handleProvinceChange = (e) => {
+    setProvince(e.target.value)
   }
 
   return (
@@ -131,7 +138,10 @@ function App() {
       >
         <Pane>
           <Text>This company will be located in</Text>
-          <Select marginLeft={majorScale(1)} defaultValue="on">
+          <Select marginLeft={majorScale(1)}
+            value={province}
+            onChange={handleProvinceChange}
+          >
             <option value="ab">Alberta</option>
             <option value="bc">British Columbia</option>
             <option value="mb">Manitoba</option>
