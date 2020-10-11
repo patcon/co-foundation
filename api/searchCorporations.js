@@ -1,5 +1,6 @@
 import Companies from '../data/companies'
 import fetch from 'node-fetch'
+import { filterCompanies } from './utils'
 
 export default async (req, res) => {
     res.statusCode = 200
@@ -16,8 +17,11 @@ export default async (req, res) => {
         queryaction: 'fieldquery',
     })
 
-    console.log(`${url}?${params}`)
     const response = await fetch(`${url}?${params}`)
     const json = await response.json()
-    res.send(JSON.stringify(json, null, 2))
+    let entries = json.docs
+    entries = entries.filter(e => e.Registry_Source === req.query.location)
+    entries = filterCompanies(entries)
+
+    res.send(JSON.stringify(entries, null, 2))
 }
