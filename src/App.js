@@ -95,6 +95,7 @@ const HelpTooltip = props => {
 }
 
 function App() {
+  const COMPANY_NAME = 'Co-Foundation'
   const DEFAULT_PROVINCE = 'on'
   const AVAILABLE_PROVINCES = ['ab', 'bc', 'on']
 
@@ -142,9 +143,9 @@ function App() {
       <WizardStep
         step="0-unavailable-usa"
         heading="Come Back Soon"
-        text="<THIS PLATFORM> is only available for Canadian companies at this time.
+        text={`${COMPANY_NAME} is only available for Canadian companies at this time.
           Leave us your email and we will update you once we launch
-          in the US."
+          in the US.`}
         currentStep={currentStep}
         onBack={() => handleGoTo('1-start')}
       >
@@ -183,9 +184,9 @@ function App() {
       <WizardStep
         step="0-unavailable-canada"
         heading="Come Back Soon"
-        text="<THIS PLATFORM> is not currently available in your province, at this time.
+        text={`${COMPANY_NAME} is not currently available in your province, at this time.
           Leave us your email and we will update you once we launch
-          in your province."
+          in your province.`}
         currentStep={currentStep}
         onBack={() => handleGoTo('2-pick-province')}
       >
