@@ -156,14 +156,14 @@ function App() {
             <option value="mb">Manitoba</option>
             <option value="nb">New Brunswick</option>
             <option value="nl">Newfoundland and Labrador</option>
-            <option value="nw">Northwest Territories</option>
+            <option value="nt">Northwest Territories</option>
             <option value="ns">Nove Scotia</option>
             <option value="nu">Nunavut</option>
             <option value="on">Ontario</option>
             <option value="pe">Prince Edward Island</option>
-            <option value="pq">Quebec</option>
+            <option value="qc">Quebec</option>
             <option value="sk">Saskatchewan</option>
-            <option value="yk">Yukon</option>
+            <option value="yt">Yukon</option>
           </Select>
         </Pane>
         <Button appearance="primary" onClick={() => handleProvinceNext()}>Next</Button>
