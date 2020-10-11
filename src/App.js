@@ -100,13 +100,14 @@ function App() {
 
   const [ currentStep, setCurrentStep ] = useState('1-start')
   const [ province, setProvince ] = useState(DEFAULT_PROVINCE)
+  const [ company, setCompany ] = useState('')
 
   const handleGoTo = (stepName) => {
     setCurrentStep(stepName)
   }
 
-  const handleProvinceChange = (e) => {
-    setProvince(e.target.value)
+  const handleProvinceChange = (event) => {
+    setProvince(event.target.value)
   }
 
   const handleProvinceNext = () => {
@@ -115,6 +116,14 @@ function App() {
     } else {
       handleGoTo('0-unavailable-canada')
     }
+  }
+
+  const handleCompanyChange = (event) => {
+    setCompany(event.target.value)
+  }
+
+  const handleCompanySearch = () => {
+    console.log('searching for ' + company)
   }
 
   return (
@@ -239,10 +248,11 @@ function App() {
       >
         <Text marginRight={majorScale(1)}>My company is called</Text>
         <TextInput
+          onChange={handleCompanyChange}
           marginRight={majorScale(1)}
           placeholder="Company Name or Number"
           />
-        <Button iconBefore={SearchIcon} onClick={null}>Search</Button>
+        <Button iconBefore={SearchIcon} onClick={handleCompanySearch}>Search</Button>
       </WizardStep>
     </>
   )
