@@ -64,7 +64,13 @@ const WizardStep = props => {
   return (
     <Pane paddingTop={majorScale(2)} display="flex" flexDirection="row">
       <Pane width={100} display="block">
-        { step === '1-start' ? null : <BackButton marginRight={majorScale(2)} float="right" onClick={onBack} /> }
+        { step === '1-start'
+          ? null
+          : <BackButton
+              marginRight={majorScale(2)}
+              marginTop="-6px"
+              float="right"
+              onClick={onBack} /> }
       </Pane>
       <Pane>
         <Heading marginBottom={majorScale(5)}>{heading}</Heading>
