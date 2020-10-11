@@ -29,14 +29,17 @@ const CountryButton = props => {
   )
 }
 
-const BackButton = ({ onClick }) => (
-  <IconButton
-    onClick={onClick}
+const BackButton = props => {
+  const { onClick } = props
+  return (
+    <IconButton
+    { ...props }
     icon={ChevronLeftIcon}
     height={majorScale(4)}
     borderRadius={majorScale(2)}
-  />
-)
+    />
+  )
+}
 
 const EmailInputField = () => (
   <TextInputField
@@ -60,8 +63,8 @@ const WizardStep = props => {
 
   return (
     <Pane display="flex" flexDirection="row">
-      <Pane width={100} display="flex">
-        { step === 1 ? null : <BackButton onClick={onBack} /> }
+      <Pane width={100} display="block">
+        { step === '1-start' ? null : <BackButton marginRight={majorScale(2)} float="right" onClick={onBack} /> }
       </Pane>
       <Pane>
         <Heading marginBottom={majorScale(5)}>{heading}</Heading>
@@ -130,7 +133,7 @@ function App() {
       <WizardStep
         step="0-unavailable-usa"
         heading="Come Back Soon"
-        text="<Service Name> is only available for Canadian companies at this time.
+        text="<THIS PLATFORM> is only available for Canadian companies at this time.
           Leave us your email and we will update you once we launch
           in the US."
         currentStep={currentStep}
@@ -171,7 +174,7 @@ function App() {
       <WizardStep
         step="0-unavailable-canada"
         header="Come Back Soon"
-        text="<Service Name> is not currently available in your province, at this time.
+        text="<THIS PLATFORM> is not currently available in your province, at this time.
           Leave us your email and we will update you once we launch
           in your province."
         currentStep={currentStep}
