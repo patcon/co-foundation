@@ -18,7 +18,6 @@ import {
   Select,
   Strong,
   Table,
-  TableRow,
   Text,
   TextInput,
   TextInputField,
@@ -119,6 +118,76 @@ const PillHelpTooltip = props => {
   )
 }
 
+const PROVINCE_DATA = [
+  {
+    code: 'ab',
+    name: 'Alberta',
+  },
+  {
+    code: 'bc',
+    name: 'British Columbia',
+  },
+  {
+    code: 'mb',
+    name: 'Manitoba',
+  },
+  {
+    code: 'nb',
+    name: 'New Brunswick',
+  },
+  {
+    code: 'nl',
+    name: 'Newfoundland and Labrador',
+  },
+  {
+    code: 'nt',
+    name: 'Northwest Territories',
+  },
+  {
+    code: 'ns',
+    name: 'Nova Scotia',
+  },
+  {
+    code: 'nu',
+    name: 'Nunavut',
+  },
+  {
+    code: 'on',
+    name: 'Ontario',
+  },
+  {
+    code: 'pe',
+    name: 'Prince Edward Island',
+  },
+  {
+    code: 'qc',
+    name: 'Quebec',
+  },
+  {
+    code: 'sk',
+    name: 'Saskatchewan',
+  },
+  {
+    code: 'yt',
+    name: 'Yukon',
+  },
+]
+
+const getProvinceByCode = (code) => {
+  console.log(code)
+  const res = PROVINCE_DATA.find(p => p.code === code)
+  console.log(res)
+  return res
+}
+
+const ProvinceSelect = props => (
+  <Select {...props}>
+    { PROVINCE_DATA.map(p => (
+      <option key={p.code} value={p.code}>{p.name}</option>
+    ))}
+  </Select>
+)
+
 const HelpBox = props => {
   const { type, children, heading } = props
   const ICON_TYPES = {
@@ -196,7 +265,7 @@ const WarningHelpBox = props => {
 }
 
 const ResultsContainer = props => {
-  const { results } = props
+  const { results, province } = props
 
   if (results === null) {
     return null
@@ -212,7 +281,7 @@ const ResultsContainer = props => {
             Double check that the name or number of your company is correct.
           </ListItem>
           <ListItem>
-            Is your company incorporated in Ontario?
+            Is your company incorporated in {getProvinceByCode(province).name}?
             <PillHelpTooltip
               text="Your company must be either a provincial Ontario corporation
                 or a Federal corporation extra provincially registered in Ontario." />
@@ -327,24 +396,11 @@ function App() {
       >
         <Pane>
           <Text>This company will be located in</Text>
-          <Select marginLeft={majorScale(1)}
+          <ProvinceSelect
+            marginLeft={majorScale(1)}
             value={province}
             onChange={handleProvinceChange}
-          >
-            <option value="ab">Alberta</option>
-            <option value="bc">British Columbia</option>
-            <option value="mb">Manitoba</option>
-            <option value="nb">New Brunswick</option>
-            <option value="nl">Newfoundland and Labrador</option>
-            <option value="nt">Northwest Territories</option>
-            <option value="ns">Nove Scotia</option>
-            <option value="nu">Nunavut</option>
-            <option value="on">Ontario</option>
-            <option value="pe">Prince Edward Island</option>
-            <option value="qc">Quebec</option>
-            <option value="sk">Saskatchewan</option>
-            <option value="yt">Yukon</option>
-          </Select>
+          />
         </Pane>
         <Button marginTop={majorScale(4)} appearance="primary" onClick={() => handleProvinceNext()}>Next</Button>
       </WizardStep>
@@ -442,7 +498,7 @@ function App() {
           placeholder="Company Name or Number"
           />
         <Button iconBefore={SearchIcon} onClick={handleCompanySearch}>Search</Button>
-        <ResultsContainer results={companyResults} />
+        <ResultsContainer results={companyResults} province={province} />
       </WizardStep>
     </>
   )
