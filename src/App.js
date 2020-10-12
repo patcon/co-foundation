@@ -93,7 +93,7 @@ const WizardStep = props => {
 }
 
 const HelpTooltip = props => {
-  const { children, text } = props
+  const { children, text, href } = props
 
   return (
     <Tooltip
@@ -101,7 +101,7 @@ const HelpTooltip = props => {
       content={
         <Pane margin={majorScale(2)}>
             <Paragraph>{text}</Paragraph>
-            <Button as="a" href="#">Read More</Button>
+            <Button as="a" href={href}>Read More</Button>
         </Pane>
       }>
       { children }
@@ -110,78 +110,85 @@ const HelpTooltip = props => {
 }
 
 const PillHelpTooltip = props => {
-  const { text } = props
-
   return (
-    <HelpTooltip text={text}>
+    <HelpTooltip {...props}>
       <Pill display="inline-flex" margin={majorScale(1)}>?</Pill>
     </HelpTooltip>
   )
 }
 
+const HelpBox = props => {
+  const { type, children, heading } = props
+  const ICON_TYPES = {
+    'info': LightbulbIcon,
+    'error': ErrorIcon,
+  }
+
+  return (
+    <Pane
+    marginTop={majorScale(3)}
+    paddingX={majorScale(3)}
+    paddingY={majorScale(2)}
+    elevation={1}
+    display="flex"
+  >
+    <Icon icon={ICON_TYPES[type]} size={20} marginRight={majorScale(1)} />
+    <Pane width="100%">
+      <Strong>{ heading }</Strong>
+      <Pane>
+        { children }
+      </Pane>
+    </Pane>
+  </Pane>
+  )
+}
+
 const ResultsContainer = props => {
-  const { heading, results } = props
+  const { results } = props
 
   if (results === null) {
     return null
   }
 
-  const NoResults = () => (
-    <>
-      <Icon icon={ErrorIcon} size="20px" marginRight={majorScale(1)} />
-      <Pane>
-        <Strong>Sorry, we couldn't find a company under that name or number</Strong>
-        <Pane>
-          <UnorderedList>
-            <ListItem>
-              Double check that the name or number of your company is correct.
-            </ListItem>
-            <ListItem>
-              Is your company incorporated in Ontario?
-              <PillHelpTooltip
-                text="Your company must be either a provincial Ontario corporation
-                  or a Federal corporation extra provincially registered in Ontario." />
-            </ListItem>
-            <ListItem>
-            Are you a for-profit company provincially incorporated under the
-              Ontario Business Corporations Act (BCA) or
-              Canada Business Corporations Act (CBCA)? <Link href="#">Why that matters?</Link>
-            </ListItem>
-          </UnorderedList>
-        </Pane>
-      </Pane>
-    </>
-  )
-
-  const ListResults = () => (
-    <>
-      <Icon icon={LightbulbIcon} size={20} marginRight={majorScale(1)} />
-      <Pane width="100%">
-        <Strong>We Found Your Company</Strong>
-        <Table>
-          <Table.Body>
-            { results.map((r) => (
-              <Table.Row key={r.number} paddingY={majorScale(1)} width="100%">
-                <Table.Cell paddingRight="0" paddingRight={majorScale(2)}><Text size={400}>{r.name}</Text></Table.Cell>
-                <Table.Cell paddingX="0" flex="0 0 auto"><Link href="#"><Strong>Select</Strong></Link></Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-      </Pane>
-    </>
-  )
+  if (results.length === 0) {
+    return (
+      <HelpBox type="error"
+        heading="Sorry, we couldn't find a company under that name or number"
+      >
+        <UnorderedList>
+          <ListItem>
+            Double check that the name or number of your company is correct.
+          </ListItem>
+          <ListItem>
+            Is your company incorporated in Ontario?
+            <PillHelpTooltip
+              text="Your company must be either a provincial Ontario corporation
+                or a Federal corporation extra provincially registered in Ontario." />
+          </ListItem>
+          <ListItem>
+          Are you a for-profit company provincially incorporated under the
+            Ontario Business Corporations Act (BCA) or
+            Canada Business Corporations Act (CBCA)? <Link href="#">Why that matters?</Link>
+          </ListItem>
+        </UnorderedList>
+      </HelpBox>
+    )
+  }
 
   return (
-    <Pane
-      marginTop={majorScale(3)}
-      paddingX={majorScale(3)}
-      paddingY={majorScale(2)}
-      elevation={1}
-      display="flex"
+    <HelpBox type="info"
+      heading="We Found Your Company"
     >
-      { results.length > 0 ? <ListResults /> : <NoResults /> }
-    </Pane>
+      <Table.Body>
+        { results.map((r) => (
+          <Table.Row key={r.number} paddingY={majorScale(1)} width="100%">
+            <Table.Cell paddingLeft="0" paddingRight={majorScale(2)}><Text size={400}>{r.name}</Text></Table.Cell>
+            <Table.Cell paddingX="0" flex="0 0 auto"><Link href="#"><Strong>Select</Strong></Link></Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </HelpBox>
+
   )
 }
 
@@ -328,9 +335,10 @@ function App() {
             text="Both named and numbered companies are legal.
             A numbered company may be required to register its
             operating name in certain circumstances."
+            href="#"
             />
         </Pane>
-        <Pane display="flex" alignItems="center">
+        <Pane>
           <Text>My company will be called</Text>
           <TextInput
             marginLeft={majorScale(1)}
@@ -345,9 +353,28 @@ function App() {
             text="Your corporate name requires a legal ending (like Inc. or Ltd.).
             The ending has no legal consequences.
             You can choose whichever you prefer."
+            href="#"
             />
         </Pane>
-        <Button appearance="primary" onClick={null}>Submit</Button>
+        <HelpBox
+          type="info"
+          heading="Requirements"
+        >
+          <Paragraph>
+            The Company’s name must be unique and must contain a 
+            <HelpTooltip href="#"
+              text="The Distinctive element is the word that promotes your corporation’s brand. For example “Rhino Sandwiches Inc.“">
+              <Strong> Distinctive </Strong>
+            </HelpTooltip>
+            element and a 
+            <HelpTooltip href="#"
+              text="The Descriptive element is the word that describes the nature of your business. For example “Rhino Sandwiches Inc.“">
+              <Strong> Descriptive </Strong>
+            </HelpTooltip>
+            element. The name can’t be profane and must conform to legal requirements.
+          </Paragraph>
+        </HelpBox>
+        <Button marginTop={majorScale(4)} appearance="primary" onClick={null}>Submit</Button>
       </WizardStep>
       <WizardStep
         step="4-existing"
