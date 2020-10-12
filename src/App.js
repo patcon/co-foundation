@@ -2,18 +2,26 @@ import React, { useState } from 'react';
 import {
   Button,
   ChevronLeftIcon,
+  ErrorIcon,
   Heading,
+  Icon,
   IconButton,
+  LightbulbIcon,
+  Link,
+  ListItem,
   majorScale,
   Pane,
   Paragraph,
   Pill,
   SearchIcon,
   Select,
+  Strong,
+  Table,
   Text,
   TextInput,
   TextInputField,
   Tooltip,
+  UnorderedList,
 } from 'evergreen-ui'
 
 const CountryButton = props => {
@@ -110,6 +118,72 @@ const PillHelpTooltip = props => {
   )
 }
 
+const ResultsContainer = props => {
+  const { heading, results } = props
+
+  if (results === null) {
+    return null
+  }
+
+  const NoResults = () => (
+    <>
+      <Icon icon={ErrorIcon} size="20px" marginRight={majorScale(1)} />
+      <Pane>
+        <Strong>Sorry, we couldn't find a company under that name or number</Strong>
+        <Pane>
+          <UnorderedList>
+            <ListItem>
+              Double check that the name or number of your company is correct.
+            </ListItem>
+            <ListItem>
+              Is your company incorporated in Ontario?
+              <PillHelpTooltip
+                text="Your company must be either a provincial Ontario corporation
+                  or a Federal corporation extra provincially registered in Ontario." />
+            </ListItem>
+            <ListItem>
+            Are you a for-profit company provincially incorporated under the
+              Ontario Business Corporations Act (BCA) or
+              Canada Business Corporations Act (CBCA)? <Link href="#">Why that matters?</Link>
+            </ListItem>
+          </UnorderedList>
+        </Pane>
+      </Pane>
+    </>
+  )
+
+  const ListResults = () => (
+    <>
+      <Icon icon={LightbulbIcon} size="20px" marginRight={majorScale(1)} />
+      <Pane width="100%">
+        <Strong>We Found Your Company</Strong>
+        <Table>
+          <Table.Body>
+            { results.map((r) => (
+              <Table.Row paddingY={majorScale(1)} width="100%">
+                <Table.Cell paddingRight="0" paddingRight={majorScale(2)}><Text size="400">{r.name}</Text></Table.Cell>
+                <Table.Cell paddingX="0" flex="0 0 auto"><Link href="#"><Strong>Select</Strong></Link></Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </Pane>
+    </>
+  )
+
+  return (
+    <Pane
+      marginTop={majorScale(3)}
+      paddingX={majorScale(3)}
+      paddingY={majorScale(2)}
+      elevation="1"
+      display="flex"
+    >
+      { results.length > 0 ? <ListResults /> : <NoResults /> }
+    </Pane>
+  )
+}
+
 function App() {
   const COMPANY_NAME = 'Co-Foundation'
   const DEFAULT_PROVINCE = 'on'
@@ -118,6 +192,7 @@ function App() {
   const [ currentStep, setCurrentStep ] = useState('1-start')
   const [ province, setProvince ] = useState(DEFAULT_PROVINCE)
   const [ company, setCompany ] = useState('')
+  const [ companyResults, setCompanyResults ] = useState(null)
 
   const handleGoTo = (stepName) => {
     setCurrentStep(stepName)
@@ -140,7 +215,11 @@ function App() {
   }
 
   const handleCompanySearch = () => {
-    console.log('searching for ' + company)
+    if (company === '') {
+      setCompanyResults([])
+    } else {
+      setCompanyResults([{ name: company }])
+    }
   }
 
   return (
@@ -270,6 +349,7 @@ function App() {
           placeholder="Company Name or Number"
           />
         <Button iconBefore={SearchIcon} onClick={handleCompanySearch}>Search</Button>
+        <ResultsContainer results={companyResults} />
       </WizardStep>
     </>
   )
