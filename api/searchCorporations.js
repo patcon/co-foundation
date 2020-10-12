@@ -7,7 +7,7 @@ export default async (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     const apiBaseUrl = 'https://searchapi.mrasservice.ca/Search/api/v1'
     const apiPath = '/search'
-    const keyword = req.query.q
+    const keyword = req.query.q || ''
     const params = new URLSearchParams({
         fq: `keyword:"${keyword}" Status_State:Active`,
         location: (req.query.location || 'ON').toUpperCase(),
