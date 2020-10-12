@@ -1,4 +1,3 @@
-import Companies from '../data/companies'
 import fetch from 'node-fetch'
 import { filterCompanies } from './utils'
 
