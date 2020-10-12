@@ -20,7 +20,7 @@ export default async (req, res) => {
     const response = await fetch(`${url}?${params}`)
     const json = await response.json()
     let entries = json.docs
-    entries = entries.filter(e => e.Registry_Source === req.query.location)
+    entries = entries.filter(e => e.Registry_Source === params.get('location'))
     entries = filterCompanies(entries)
 
     res.send(JSON.stringify(entries, null, 2))
