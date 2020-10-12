@@ -84,7 +84,7 @@ const WizardStep = props => {
 }
 
 const HelpTooltip = props => {
-  const { text } = props
+  const { children, text } = props
 
   return (
     <Tooltip
@@ -95,8 +95,18 @@ const HelpTooltip = props => {
             <Button as="a" href="#">Read More</Button>
         </Pane>
       }>
-      <Pill display="inline-flex" margin={majorScale(1)}>?</Pill>
+      { children }
     </Tooltip>
+  )
+}
+
+const PillHelpTooltip = props => {
+  const { text } = props
+
+  return (
+    <HelpTooltip text={text}>
+      <Pill display="inline-flex" margin={majorScale(1)}>?</Pill>
+    </HelpTooltip>
   )
 }
 
@@ -222,7 +232,7 @@ function App() {
             <option value="numbered">Numbered</option>
           </Select>
           <Text>company</Text>
-          <HelpTooltip
+          <PillHelpTooltip
             text="Both named and numbered companies are legal.
             A numbered company may be required to register its
             operating name in certain circumstances."
@@ -239,7 +249,7 @@ function App() {
             <option value="corp">Corp.</option>
             <option value="limited">Limited</option>
           </Select>
-          <HelpTooltip
+          <PillHelpTooltip
             text="Your corporate name requires a legal ending (like Inc. or Ltd.).
             The ending has no legal consequences.
             You can choose whichever you prefer."
