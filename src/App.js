@@ -18,9 +18,11 @@ import {
   Select,
   Strong,
   Table,
+  TableRow,
   Text,
   TextInput,
   TextInputField,
+  TickCircleIcon,
   Tooltip,
   UnorderedList,
 } from 'evergreen-ui'
@@ -122,6 +124,7 @@ const HelpBox = props => {
   const ICON_TYPES = {
     'info': LightbulbIcon,
     'error': ErrorIcon,
+    'success': TickCircleIcon,
   }
 
   return (
@@ -140,6 +143,55 @@ const HelpBox = props => {
       </Pane>
     </Pane>
   </Pane>
+  )
+}
+
+const ConfirmedHelpBox = () => (
+  <HelpBox type="success" heading="Confirmed">
+    <Paragraph>
+      Your name satisfies all legal requirements and has passed preliminary naming search tests.
+    </Paragraph>
+  </HelpBox>
+)
+
+const ErrorHelpBox = () => (
+  <HelpBox type="error" heading="Error">
+    <Paragraph>
+      <Strong>There is an exact match for this name and it may already be in use.</Strong> Choose a more unique name.
+    </Paragraph>
+    <Link href="#">I have already reserved/registered this name</Link>
+  </HelpBox>
+)
+
+const WarningHelpBox = props => {
+  const { results } = props
+
+  return (
+    <HelpBox type="error" heading="Warning">
+      <Paragraph>
+        <Strong>Your proposed name is very similar to an existing corporate name. </Strong>
+        Try to choose a more unique name. You may proceed,
+        but if your name is too similar to an existing name,
+        you may be required to change your name and incur additional fees.
+      </Paragraph>
+      <Table>
+        <Table.Head>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Type</Table.HeaderCell>
+          <Table.HeaderCell>Date</Table.HeaderCell>
+        </Table.Head>
+        <Table.Body>
+          { results.map(r => (
+            <Table.Row key={r.number}>
+              <Table.Cell>{ r.name }</Table.Cell>
+              <Table.Cell>{ r.jurisdiction }</Table.Cell>
+              <Table.Cell>{ r.date }</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+      <Link href="#">View More Companies</Link>
+    </HelpBox>
   )
 }
 
@@ -180,7 +232,7 @@ const ResultsContainer = props => {
       heading="We Found Your Company"
     >
       <Table.Body>
-        { results.map((r) => (
+        { results.map(r => (
           <Table.Row key={r.number} paddingY={majorScale(1)} width="100%">
             <Table.Cell paddingLeft="0" paddingRight={majorScale(2)}><Text size={400}>{r.name}</Text></Table.Cell>
             <Table.Cell paddingX="0" flex="0 0 auto"><Link href="#"><Strong>Select</Strong></Link></Table.Cell>
@@ -373,6 +425,7 @@ function App() {
             </HelpTooltip>
             element. The name can’t be profane and must conform to legal requirements.
           </Paragraph>
+          <Link href="#">Read More</Link>
         </HelpBox>
         <Button marginTop={majorScale(4)} appearance="primary" onClick={null}>Submit</Button>
       </WizardStep>
