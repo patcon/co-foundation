@@ -195,7 +195,7 @@ function App() {
             <option value="yt">Yukon</option>
           </Select>
         </Pane>
-        <Button appearance="primary" onClick={() => handleProvinceNext()}>Next</Button>
+        <Button marginTop={majorScale(4)} appearance="primary" onClick={() => handleProvinceNext()}>Next</Button>
       </WizardStep>
       <WizardStep
         step="0-unavailable-canada"
