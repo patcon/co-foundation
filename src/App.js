@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import fetch from 'node-fetch'
 import {
   Button,
   ChevronLeftIcon,
@@ -154,14 +155,14 @@ const ResultsContainer = props => {
 
   const ListResults = () => (
     <>
-      <Icon icon={LightbulbIcon} size="20px" marginRight={majorScale(1)} />
+      <Icon icon={LightbulbIcon} size={20} marginRight={majorScale(1)} />
       <Pane width="100%">
         <Strong>We Found Your Company</Strong>
         <Table>
           <Table.Body>
             { results.map((r) => (
-              <Table.Row paddingY={majorScale(1)} width="100%">
-                <Table.Cell paddingRight="0" paddingRight={majorScale(2)}><Text size="400">{r.name}</Text></Table.Cell>
+              <Table.Row key={r.number} paddingY={majorScale(1)} width="100%">
+                <Table.Cell paddingRight="0" paddingRight={majorScale(2)}><Text size={400}>{r.name}</Text></Table.Cell>
                 <Table.Cell paddingX="0" flex="0 0 auto"><Link href="#"><Strong>Select</Strong></Link></Table.Cell>
               </Table.Row>
             ))}
@@ -176,7 +177,7 @@ const ResultsContainer = props => {
       marginTop={majorScale(3)}
       paddingX={majorScale(3)}
       paddingY={majorScale(2)}
-      elevation="1"
+      elevation={1}
       display="flex"
     >
       { results.length > 0 ? <ListResults /> : <NoResults /> }
@@ -196,6 +197,8 @@ function App() {
 
   const handleGoTo = (stepName) => {
     setCurrentStep(stepName)
+    // Don't keep these between steps. Clear when going backwards.
+    setCompanyResults(null)
   }
 
   const handleProvinceChange = (event) => {
@@ -214,11 +217,21 @@ function App() {
     setCompany(event.target.value)
   }
 
-  const handleCompanySearch = () => {
+  const handleCompanySearch = async () => {
     if (company === '') {
+      // TODO: replace this with field validation.
       setCompanyResults([])
     } else {
-      setCompanyResults([{ name: company }])
+      const res = await fetch(
+        `/api/searchCorporations?q=${company}&location=${province}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      )
+      const json = await res.json()
+      setCompanyResults(json)
     }
   }
 
