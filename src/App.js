@@ -2,18 +2,15 @@ import React, { useState } from 'react'
 import fetch from 'node-fetch'
 import {
   Button,
-  ChevronLeftIcon,
   ErrorIcon,
   Heading,
   Icon,
-  IconButton,
   LightbulbIcon,
   Link,
   ListItem,
   majorScale,
   Pane,
   Paragraph,
-  Pill,
   SearchIcon,
   Select,
   Strong,
@@ -22,33 +19,16 @@ import {
   TextInput,
   TextInputField,
   TickCircleIcon,
-  Tooltip,
   UnorderedList,
 } from 'evergreen-ui'
-
-const CountryButton = props => {
-  const { onClick, flag, name } = props
-
-  return (
-    <Button onClick={onClick} height={majorScale(8)} paddingX={majorScale(1)} marginRight={majorScale(3)}>
-      <Text width="100px">
-        <Text fontSize={majorScale(3)}>{ flag }</Text><br />
-        <Text fontWeight="600">{ name }</Text>
-      </Text>
-    </Button>
-  )
-}
-
-const BackButton = props => {
-  return (
-    <IconButton
-    { ...props }
-    icon={ChevronLeftIcon}
-    height={majorScale(4)}
-    borderRadius={majorScale(2)}
-    />
-  )
-}
+import { CountryButton, BackButton } from './components/Buttons'
+import {
+  PROVINCE_DATA,
+  COMPANY_NAME,
+  DEFAULT_PROVINCE,
+  AVAILABLE_PROVINCES,
+} from './constants'
+import { HelpTooltip, PillHelpTooltip } from './components/Tooltips'
 
 const EmailInputField = () => (
   <TextInputField
@@ -92,86 +72,6 @@ const WizardStep = props => {
     </Pane>
   )
 }
-
-const HelpTooltip = props => {
-  const { children, text, href } = props
-
-  return (
-    <Tooltip
-      appearance="card"
-      content={
-        <Pane margin={majorScale(2)}>
-            <Paragraph>{text}</Paragraph>
-            <Button as="a" href={href}>Read More</Button>
-        </Pane>
-      }>
-      { children }
-    </Tooltip>
-  )
-}
-
-const PillHelpTooltip = props => {
-  return (
-    <HelpTooltip {...props}>
-      <Pill display="inline-flex" margin={majorScale(1)}>?</Pill>
-    </HelpTooltip>
-  )
-}
-
-const PROVINCE_DATA = [
-  {
-    code: 'ab',
-    name: 'Alberta',
-  },
-  {
-    code: 'bc',
-    name: 'British Columbia',
-  },
-  {
-    code: 'mb',
-    name: 'Manitoba',
-  },
-  {
-    code: 'nb',
-    name: 'New Brunswick',
-  },
-  {
-    code: 'nl',
-    name: 'Newfoundland and Labrador',
-  },
-  {
-    code: 'nt',
-    name: 'Northwest Territories',
-  },
-  {
-    code: 'ns',
-    name: 'Nova Scotia',
-  },
-  {
-    code: 'nu',
-    name: 'Nunavut',
-  },
-  {
-    code: 'on',
-    name: 'Ontario',
-  },
-  {
-    code: 'pe',
-    name: 'Prince Edward Island',
-  },
-  {
-    code: 'qc',
-    name: 'Quebec',
-  },
-  {
-    code: 'sk',
-    name: 'Saskatchewan',
-  },
-  {
-    code: 'yt',
-    name: 'Yukon',
-  },
-]
 
 const getProvinceByCode = (code) => {
   console.log(code)
@@ -314,10 +214,6 @@ const ResultsContainer = props => {
 }
 
 function App() {
-  const COMPANY_NAME = 'Co-Foundation'
-  const DEFAULT_PROVINCE = 'on'
-  const AVAILABLE_PROVINCES = ['ab', 'bc', 'on']
-
   const [ currentStep, setCurrentStep ] = useState('1-start')
   const [ province, setProvince ] = useState(DEFAULT_PROVINCE)
   const [ company, setCompany ] = useState('')
