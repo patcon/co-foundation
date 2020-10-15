@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Dialog,
   UnorderedList,
@@ -18,7 +18,7 @@ import { PillHelpTooltip } from './Tooltips'
 import useToggle from '../hooks/useToggle'
 
 const OnboardingConfirmationDialog = props => {
-  const { isShown, handleClose, handleConfirm } = props
+  const { isShown, companyData, handleClose, handleConfirm } = props
 
   return (
     <Dialog
@@ -40,11 +40,11 @@ const OnboardingConfirmationDialog = props => {
           >
             <Pane>
               <Heading as="h4" textTransform="uppercase">Company Name</Heading>
-              <Strong>Any Company</Strong>
+              <Strong>{companyData?.name}</Strong>
             </Pane>
             <Pane>
               <Heading as="h4" textTransform="uppercase">Corporate Number</Heading>
-              <Strong>000000000</Strong>
+              <Strong>{companyData?.number}</Strong>
             </Pane>
           </Pane>
         </Pane>
@@ -57,8 +57,14 @@ export const ResultsContainer = props => {
   const { results, province } = props
 
   const [ showDialog, toggleShowDialog ] = useToggle()
+  const [ activeIndex, setActiveIndex ] = useState()
 
-  const handleToggleDialog = e => {
+  const handleSelect = index => {
+    setActiveIndex(index)
+    toggleShowDialog()
+  }
+
+  const handleCloseDialog = () => {
     toggleShowDialog()
   }
 
@@ -96,16 +102,17 @@ export const ResultsContainer = props => {
       heading="We Found Your Company"
     >
       <Table.Body>
-        { results.map(r => (
+        { results.map((r, index) => (
           <Table.Row key={r.number} paddingY={majorScale(1)} width="100%">
             <Table.Cell paddingLeft="0" paddingRight={majorScale(2)}><Text size={400}>{r.name}</Text></Table.Cell>
-            <Table.Cell paddingX="0" flex="0 0 auto"><Link cursor="pointer" onClick={handleToggleDialog}><Strong>Select</Strong></Link></Table.Cell>
+            <Table.Cell paddingX="0" flex="0 0 auto"><Link cursor="pointer" onClick={() => handleSelect(index)}><Strong>Select</Strong></Link></Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
       <OnboardingConfirmationDialog
         isShown={showDialog}
-        handleClose={handleToggleDialog}
+        companyData={results[activeIndex]}
+        handleClose={handleCloseDialog}
         handleConfirm={() => null}
       />
     </HelpBox>
