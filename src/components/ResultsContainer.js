@@ -1,19 +1,66 @@
 import React from 'react'
 import {
+  Dialog,
   UnorderedList,
   Link,
   ListItem,
   Table,
   Text,
   Strong,
+  Pane,
+  Heading,
+  Paragraph,
   majorScale,
 } from 'evergreen-ui'
 import { getProvinceByCode } from '../utils'
 import { HelpBox } from './HelpBox'
 import { PillHelpTooltip } from './Tooltips'
+import useToggle from '../hooks/useToggle'
+
+const OnboardingConfirmationDialog = props => {
+  const { isShown, handleClose, handleConfirm } = props
+
+  return (
+    <Dialog
+      isShown={isShown}
+      title="Confirm Selection"
+      onCloseComplete={handleClose}
+      onConfirm={handleConfirm}
+      cancelLabel="Close"
+    >
+      <Pane marginX={majorScale(1)}>
+        <Paragraph>Please confirm that this is your company.</Paragraph>
+        <Pane>
+          <Pane
+            display="grid"
+            gridTemplateColumns="repeat(2, 1fr)"
+            elevation={1}
+            marginTop={majorScale(3)}
+            padding={majorScale(3)}
+          >
+            <Pane>
+              <Heading as="h4" textTransform="uppercase">Company Name</Heading>
+              <Strong>Any Company</Strong>
+            </Pane>
+            <Pane>
+              <Heading as="h4" textTransform="uppercase">Corporate Number</Heading>
+              <Strong>000000000</Strong>
+            </Pane>
+          </Pane>
+        </Pane>
+      </Pane>
+    </Dialog>
+  )
+}
 
 export const ResultsContainer = props => {
-  const { results, province, onSelect } = props
+  const { results, province } = props
+
+  const [ showDialog, toggleShowDialog ] = useToggle()
+
+  const handleToggleDialog = e => {
+    toggleShowDialog()
+  }
 
   if (results === null) {
     return null
@@ -52,11 +99,15 @@ export const ResultsContainer = props => {
         { results.map(r => (
           <Table.Row key={r.number} paddingY={majorScale(1)} width="100%">
             <Table.Cell paddingLeft="0" paddingRight={majorScale(2)}><Text size={400}>{r.name}</Text></Table.Cell>
-            <Table.Cell paddingX="0" flex="0 0 auto"><Link cursor="pointer" onClick={onSelect}><Strong>Select</Strong></Link></Table.Cell>
+            <Table.Cell paddingX="0" flex="0 0 auto"><Link cursor="pointer" onClick={handleToggleDialog}><Strong>Select</Strong></Link></Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
+      <OnboardingConfirmationDialog
+        isShown={showDialog}
+        handleClose={handleToggleDialog}
+        handleConfirm={() => null}
+      />
     </HelpBox>
-
   )
 }

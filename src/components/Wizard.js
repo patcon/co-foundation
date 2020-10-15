@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import fetch from 'node-fetch'
 import {
   Button,
-  Dialog,
   Heading,
   Link,
   majorScale,
@@ -96,7 +95,6 @@ export const Wizard = () => {
   const [ company, setCompany ] = useState('')
   const [ companyResults, setCompanyResults ] = useState(null)
   const [ isLoading, toggleIsLoading ] = useToggle()
-  const [ isDialogShown, toggleIsDialogShown ] = useToggle()
 
   const handleGoTo = (stepName) => {
     setCurrentStep(stepName)
@@ -278,37 +276,7 @@ export const Wizard = () => {
         <ResultsContainer
           results={companyResults}
           province={province}
-          onSelect={() => toggleIsDialogShown()}
         />
-        <Dialog
-          isShown={isDialogShown}
-          title="Confirm Selection"
-          onCloseComplete={() => toggleIsDialogShown()}
-          onConfirm={() => null}
-          cancelLabel="Close"
-        >
-          <Pane marginX={majorScale(1)}>
-            <Paragraph>Please confirm that this is your company.</Paragraph>
-            <Pane>
-              <Pane
-                display="grid"
-                gridTemplateColumns="repeat(2, 1fr)"
-                elevation={1}
-                marginTop={majorScale(3)}
-                padding={majorScale(3)}
-              >
-                <Pane>
-                  <Heading as="h4" textTransform="uppercase">Company Name</Heading>
-                  <Strong>Any Company</Strong>
-                </Pane>
-                <Pane>
-                  <Heading as="h4" textTransform="uppercase">Corporate Number</Heading>
-                  <Strong>000000000</Strong>
-                </Pane>
-              </Pane>
-            </Pane>
-          </Pane>
-        </Dialog>
       </WizardStep>
     </>
   )
