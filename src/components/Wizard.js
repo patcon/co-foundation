@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import fetch from 'node-fetch'
 import {
   Button,
+  Dialog,
   Heading,
   Link,
   majorScale,
@@ -23,6 +24,7 @@ import {
 } from '../constants'
 import { HelpBox } from './HelpBox'
 import { ResultsContainer } from './ResultsContainer'
+import useToggle from '../hooks/useToggle'
 
 const WizardStep = props => {
   const {
@@ -65,7 +67,8 @@ export const Wizard = () => {
   const [ province, setProvince ] = useState(DEFAULT_PROVINCE)
   const [ company, setCompany ] = useState('')
   const [ companyResults, setCompanyResults ] = useState(null)
-  const [ isLoading, setIsLoading ] = useState(false)
+  const [ isLoading, toggleIsLoading ] = useToggle()
+  const [ isDialogShown, toggleIsDialogShown ] = useToggle()
 
   const handleGoTo = (stepName) => {
     setCurrentStep(stepName)
@@ -94,7 +97,7 @@ export const Wizard = () => {
       // TODO: replace this with field validation.
       setCompanyResults([])
     } else {
-      setIsLoading(true)
+      toggleIsLoading()
       const res = await fetch(
         `/api/searchCorporations?q=${company}&location=${province}`,
         {
@@ -105,7 +108,7 @@ export const Wizard = () => {
       )
       const json = await res.json()
       setCompanyResults(json)
-      setIsLoading(false)
+      toggleIsLoading()
     }
   }
 
@@ -246,7 +249,40 @@ export const Wizard = () => {
             />
           <Button iconBefore={SearchIcon} onClick={handleCompanySearch} isLoading={isLoading}>Search</Button>
         </form>
-        <ResultsContainer results={companyResults} province={province} />
+        <ResultsContainer
+          results={companyResults}
+          province={province}
+          onSelect={() => toggleIsDialogShown()}
+        />
+        <Dialog
+          isShown={isDialogShown}
+          title="Confirm Selection"
+          onCloseComplete={() => toggleIsDialogShown()}
+          onConfirm={() => null}
+          cancelLabel="Close"
+        >
+          <Pane marginX={majorScale(1)}>
+            <Paragraph>Please confirm that this is your company.</Paragraph>
+            <Pane>
+              <Pane
+                display="grid"
+                gridTemplateColumns="repeat(2, 1fr)"
+                elevation={1}
+                marginTop={majorScale(3)}
+                padding={majorScale(3)}
+              >
+                <Pane>
+                  <Heading as="h4" textTransform="uppercase">Company Name</Heading>
+                  <Strong>Any Company</Strong>
+                </Pane>
+                <Pane>
+                  <Heading as="h4" textTransform="uppercase">Corporate Number</Heading>
+                  <Strong>000000000</Strong>
+                </Pane>
+              </Pane>
+            </Pane>
+          </Pane>
+        </Dialog>
       </WizardStep>
     </>
   )

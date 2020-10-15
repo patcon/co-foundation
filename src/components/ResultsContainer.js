@@ -13,7 +13,7 @@ import { HelpBox } from './HelpBox'
 import { PillHelpTooltip } from './Tooltips'
 
 export const ResultsContainer = props => {
-  const { results, province } = props
+  const { results, province, onSelect } = props
 
   if (results === null) {
     return null
@@ -52,7 +52,7 @@ export const ResultsContainer = props => {
         { results.map(r => (
           <Table.Row key={r.number} paddingY={majorScale(1)} width="100%">
             <Table.Cell paddingLeft="0" paddingRight={majorScale(2)}><Text size={400}>{r.name}</Text></Table.Cell>
-            <Table.Cell paddingX="0" flex="0 0 auto"><Link href="#"><Strong>Select</Strong></Link></Table.Cell>
+            <Table.Cell paddingX="0" flex="0 0 auto"><Link cursor="pointer" onClick={onSelect}><Strong>Select</Strong></Link></Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
