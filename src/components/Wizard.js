@@ -65,6 +65,7 @@ export const Wizard = () => {
   const [ province, setProvince ] = useState(DEFAULT_PROVINCE)
   const [ company, setCompany ] = useState('')
   const [ companyResults, setCompanyResults ] = useState(null)
+  const [ isLoading, setIsLoading ] = useState(false)
 
   const handleGoTo = (stepName) => {
     setCurrentStep(stepName)
@@ -93,6 +94,7 @@ export const Wizard = () => {
       // TODO: replace this with field validation.
       setCompanyResults([])
     } else {
+      setIsLoading(true)
       const res = await fetch(
         `/api/searchCorporations?q=${company}&location=${province}`,
         {
@@ -103,6 +105,7 @@ export const Wizard = () => {
       )
       const json = await res.json()
       setCompanyResults(json)
+      setIsLoading(false)
     }
   }
 
@@ -234,13 +237,15 @@ export const Wizard = () => {
         currentStep={currentStep}
         onBack={() => handleGoTo('3-new-or-existing')}
       >
-        <Text marginRight={majorScale(1)}>My company is called</Text>
-        <TextInput
-          onChange={handleCompanyChange}
-          marginRight={majorScale(1)}
-          placeholder="Company Name or Number"
-          />
-        <Button iconBefore={SearchIcon} onClick={handleCompanySearch}>Search</Button>
+        <form>
+          <Text marginRight={majorScale(1)}>My company is called</Text>
+          <TextInput
+            onChange={handleCompanyChange}
+            marginRight={majorScale(1)}
+            placeholder="Company Name or Number"
+            />
+          <Button iconBefore={SearchIcon} onClick={handleCompanySearch} isLoading={isLoading}>Search</Button>
+        </form>
         <ResultsContainer results={companyResults} province={province} />
       </WizardStep>
     </>
