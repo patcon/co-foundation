@@ -62,6 +62,34 @@ const WizardStep = props => {
   )
 }
 
+const EmailNotificationForm = props => {
+  const { type } = props
+  const [ isLoading, toggleIsLoading ] = useToggle()
+  const [ isSubmitted, setIsSubmitted ] = useState(false)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    toggleIsLoading()
+    setTimeout(() => {
+      console.log('Subscribed to email type: ' + type)
+      setIsSubmitted(true)
+      toggleIsLoading()
+    }, 1000)
+  }
+
+  if (isSubmitted) {
+    return <Paragraph>Thank you! We'll send you an email when we announce expansion into your region.</Paragraph>
+  } else {
+    return (
+      <form onSubmit={handleSubmit}>
+        <EmailInputField />
+        <Button appearance="primary" isLoading={isLoading}>Send</Button>
+      </form>
+    )
+  }
+}
+
 export const Wizard = () => {
   const [ currentStep, setCurrentStep ] = useState('1-start')
   const [ province, setProvince ] = useState(DEFAULT_PROVINCE)
@@ -134,8 +162,7 @@ export const Wizard = () => {
         currentStep={currentStep}
         onBack={() => handleGoTo('1-start')}
       >
-        <EmailInputField />
-        <Button appearance="primary">Send</Button>
+        <EmailNotificationForm type="unavailable-usa" />
       </WizardStep>
       <WizardStep
         step="2-pick-province"
@@ -162,8 +189,7 @@ export const Wizard = () => {
         currentStep={currentStep}
         onBack={() => handleGoTo('2-pick-province')}
       >
-        <EmailInputField />
-        <Button appearance="primary">Send</Button>
+        <EmailNotificationForm type="unavailable-canada" />
       </WizardStep>
       <WizardStep
         step="3-new-or-existing"
