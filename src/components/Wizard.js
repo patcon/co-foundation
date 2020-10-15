@@ -125,7 +125,7 @@ export const Wizard = () => {
     } else {
       toggleIsLoading()
       const res = await fetch(
-        `/api/searchCorporations?q=${company}&location=${province}`,
+        `/api/v1/companies/search?q=${company}&location=${province}`,
         {
           headers: {
             'Content-Type': 'application/json',
