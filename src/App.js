@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Redirect, Route, BrowserRouter as Router } from 'react-router-dom';
 import { Wizard } from './components/Wizard'
 import { Dashboard } from './components/Dashboard'
-import { PdfViewer } from './components/PdfViewer'
+import { FormPdfViewer } from './components/PdfViewer'
 
 const App = () => (
   <Router>
@@ -14,7 +14,7 @@ const App = () => (
         <Wizard />
       </Route>
       <Route path="/pdf">
-        <PdfViewer />
+        <FormPdfViewer formId="07200" />
       </Route>
       <Route path="/dashboard">
         <Dashboard />
