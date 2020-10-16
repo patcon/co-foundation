@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Pane, Paragraph } from 'evergreen-ui'
 import { PDFDocument } from 'pdf-lib'
-import { Document, Page } from 'react-pdf'
+import { pdfjs, Document, Page } from 'react-pdf'
 import fetch from 'node-fetch'
 import { FORM_FIELDS } from '../constants'
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 export const PdfViewer = () => {
   const [ currentPage, setCurrentPage ] = useState(8)
