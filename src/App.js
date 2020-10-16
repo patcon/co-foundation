@@ -14,7 +14,10 @@ const App = () => (
         <Wizard />
       </Route>
       <Route path="/pdf">
-        <FormPdfViewer formId="07200" />
+        <FormPdfViewer formId="07200" pages="8,9,9" />
+      </Route>
+      <Route path="/pdf2">
+        <FormPdfViewer formId="11377" pages="2-7" />
       </Route>
       <Route path="/dashboard">
         <Dashboard />
