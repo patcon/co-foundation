@@ -128,18 +128,18 @@ export const CompanyInfoBox = props => {
   const [ isEditing, toggleEditing ] = useToggle(false)
   return (
     <Pane padding={majorScale(3)} marginBottom={majorScale(3)} elevation={1}>
-      <Pane display="flex" justifyContent="space-between">
+      <Pane minHeight={majorScale(4)} display="flex" justifyContent="space-between">
         <Heading as="h2">{title}</Heading>
         {isEditable
           ? isEditing
             ? <Pane>
-                <Link onClick={() => toggleEditing()} marginRight={majorScale(3)}>Cancel</Link>
+                <Link cursor="pointer" onClick={() => toggleEditing()} marginRight={majorScale(2)}>Cancel</Link>
                 <FakeLoadButton onComplete={() => toggleEditing()} textTransform="uppercase" appearance="primary">
                   Save Changes
                 </FakeLoadButton>
               </Pane>
             : !editLinkOverride
-              ? <Link onClick={() => toggleEditing()}>{editLabel}</Link>
+              ? <Link cursor="pointer" onClick={() => toggleEditing()}>{editLabel}</Link>
               : <Link href={editLinkOverride}>{editLabel}</Link>
           : null
         }
