@@ -31,6 +31,9 @@ export const Dashboard = props => {
             { tab.name }
           </SidebarTab>
         ))}
+        <Pane>
+          <SidebarTab paddingLeft={majorScale(4)} fontSize="0.7em">Submenu</SidebarTab>
+        </Pane>
       </Tablist>
       <Pane padding={16} background="tint1" flex="1">
         <Switch>
