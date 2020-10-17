@@ -60,6 +60,32 @@ export const Dashboard = props => {
   )
 }
 
+export const InfoGroup = props => {
+  const { heading, content } = props
+
+  return (
+    <Pane marginBottom={majorScale(3)} marginRight={majorScale(6)}>
+      <Heading fontStyle="italic" is="h6">{heading}</Heading>
+      <Paragraph>{content}</Paragraph>
+  </Pane>
+  )
+}
+
+export const OrganizationInfoView = props => {
+  const { jurisdiction, yearEndMonth } = props
+
+  return (
+    <Pane display="flex">
+      <InfoGroup
+        heading="Jurisdiction of Incorporation"
+        content={jurisdiction} />
+      <InfoGroup
+        heading="Fiscal Year End"
+        content={`Last day of ${yearEndMonth}`} />
+    </Pane>
+  )
+}
+
 export const CompanyInfoPage = () => {
   return (
     <AppPage
@@ -88,7 +114,13 @@ export const CompanyInfoPage = () => {
       </CompanyInfoBox>
       <CompanyInfoBox
         title="Organization Information"
-        isEditable={true} />
+        isEditable={true}
+      >
+        <OrganizationInfoView
+          jurisdiction="Federal Canadian"
+          yearEndMonth="December"
+        />
+      </CompanyInfoBox>
       <CompanyInfoBox
         title="Extra Information"
         isEditable={true} />
@@ -129,7 +161,7 @@ export const CompanyInfoBox = props => {
   return (
     <Pane padding={majorScale(3)} marginBottom={majorScale(3)} elevation={1}>
       <Pane minHeight={majorScale(4)} display="flex" justifyContent="space-between">
-        <Heading as="h2">{title}</Heading>
+        <Heading size={700} is="h2" marginBottom={majorScale(3)}>{title}</Heading>
         {isEditable
           ? isEditing
             ? <Pane>
@@ -163,8 +195,8 @@ export const AppPage = props => {
   return (
     <Pane>
       <Pane>
-        <Heading textTransform="uppercase" as="h1">{title}</Heading>
-        <Heading as="h5">
+        <Heading size={900} textTransform="uppercase" is="h1">{title}</Heading>
+        <Heading is="h5">
           {byline}
           {more_link
             ? <Link target="_blank" href={more_link}>Read More</Link>
