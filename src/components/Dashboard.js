@@ -2,6 +2,7 @@ import { Button, Pane, Paragraph, Tablist, SidebarTab, Heading, Link, majorScale
 import React, { useState } from 'react'
 import { Link as RouterLink, Switch, Route, Redirect } from 'react-router-dom'
 import useToggle from '../hooks/useToggle'
+import { FakeLoadButton } from './Wizard'
 
 export const Dashboard = props => {
   const { path } = props.match
@@ -133,9 +134,9 @@ export const CompanyInfoBox = props => {
           ? isEditing
             ? <Pane>
                 <Link onClick={() => toggleEditing()} marginRight={majorScale(3)}>Cancel</Link>
-                <Button textTransform="uppercase" appearance="primary">
+                <FakeLoadButton onComplete={() => toggleEditing()} textTransform="uppercase" appearance="primary">
                   Save Changes
-                </Button>
+                </FakeLoadButton>
               </Pane>
             : !editLinkOverride
               ? <Link onClick={() => toggleEditing()}>{editLabel}</Link>

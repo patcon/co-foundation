@@ -63,30 +63,42 @@ const WizardStep = props => {
 
 const EmailNotificationForm = props => {
   const { type } = props
-  const [ isLoading, toggleIsLoading ] = useToggle()
   const [ isSubmitted, setIsSubmitted ] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    toggleIsLoading()
-    setTimeout(() => {
-      console.log('Subscribed to email type: ' + type)
-      setIsSubmitted(true)
-      toggleIsLoading()
-    }, 1000)
+  const handleSubmit = () => {
+    console.log('Subscribed to email type: ' + type)
+    setIsSubmitted(true)
   }
 
   if (isSubmitted) {
     return <Paragraph>Thank you! We'll send you an email when we announce expansion into your region.</Paragraph>
   } else {
     return (
-      <form onSubmit={handleSubmit}>
+      <form>
         <EmailInputField />
-        <Button appearance="primary" isLoading={isLoading}>Send</Button>
+        <FakeLoadButton appearance="primary" onComplete={handleSubmit}>Send</FakeLoadButton>
       </form>
     )
   }
+}
+
+export const FakeLoadButton = props => {
+  const { onComplete } = props
+  const [ isLoading, toggleLoading ] = useToggle(false)
+
+  const handleClick = () => {
+    toggleLoading()
+    setTimeout(() => {
+      if (typeof onComplete == 'function') {
+        onComplete()
+      }
+      toggleLoading()
+    }, 1000)
+  }
+
+  return (
+    <Button {...props} isLoading={isLoading} onClick={handleClick} />
+  )
 }
 
 export const Wizard = () => {
