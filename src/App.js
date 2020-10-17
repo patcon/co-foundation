@@ -19,9 +19,7 @@ const App = () => (
       <Route path="/pdf2">
         <FormPdfViewer formId="11377" pages="2-7" />
       </Route>
-      <Route path="/dashboard">
-        <Dashboard />
-      </Route>
+      <Route path="/app" component={Dashboard} />
     </Switch>
   </Router>
 )
