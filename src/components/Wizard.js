@@ -14,7 +14,7 @@ import {
   TextInput,
 } from 'evergreen-ui'
 import { EmailInputField, ProvinceSelect } from './InputFields'
-import { BackButton, CountryButton } from './Buttons'
+import { BackButton, CountryButton, FakeLoadButton } from './Buttons'
 import { HelpTooltip, PillHelpTooltip } from './Tooltips'
 import {
   DEFAULT_PROVINCE,
@@ -80,25 +80,6 @@ const EmailNotificationForm = props => {
       </form>
     )
   }
-}
-
-export const FakeLoadButton = props => {
-  const { onComplete } = props
-  const [ isLoading, toggleLoading ] = useToggle(false)
-
-  const handleClick = () => {
-    toggleLoading()
-    setTimeout(() => {
-      if (typeof onComplete == 'function') {
-        onComplete()
-      }
-      toggleLoading()
-    }, 1000)
-  }
-
-  return (
-    <Button {...props} isLoading={isLoading} onClick={handleClick} />
-  )
 }
 
 export const Wizard = () => {

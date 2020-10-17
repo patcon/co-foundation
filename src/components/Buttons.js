@@ -8,6 +8,7 @@ import {
 import {
   ChevronLeftIcon,
 } from 'evergreen-ui'
+import useToggle from '../hooks/useToggle'
 
 const BackButton = props => {
   return (
@@ -33,7 +34,27 @@ const CountryButton = props => {
   )
 }
 
+const FakeLoadButton = props => {
+  const { onComplete } = props
+  const [ isLoading, toggleLoading ] = useToggle(false)
+
+  const handleClick = () => {
+    toggleLoading()
+    setTimeout(() => {
+      if (typeof onComplete == 'function') {
+        onComplete()
+      }
+      toggleLoading()
+    }, 1000)
+  }
+
+  return (
+    <Button {...props} isLoading={isLoading} onClick={handleClick} />
+  )
+}
+
 export {
   BackButton,
   CountryButton,
+  FakeLoadButton,
 }
