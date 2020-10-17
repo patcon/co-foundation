@@ -1,4 +1,4 @@
-import { Button, Pane, Paragraph, Tablist, SidebarTab, Heading, Link, majorScale } from 'evergreen-ui'
+import { Button, Pane, Paragraph, Tablist, SidebarTab, Heading, Link, majorScale, SelectField } from 'evergreen-ui'
 import React, { useState } from 'react'
 import { Link as RouterLink, Switch, Route, Redirect } from 'react-router-dom'
 import useToggle from '../hooks/useToggle'
@@ -86,6 +86,43 @@ export const OrganizationInfoView = props => {
   )
 }
 
+const MonthSelectField = props => {
+  const MONTHS = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+  return (
+    <SelectField {...props}>
+      {MONTHS.map((month, idx) => (
+        <option key={month} value={month}>{month}</option>
+      ))}
+    </SelectField>
+  )
+}
+
+export const OrganizationInfoEdit = props => {
+  const { jurisdiction, yearEndMonth } = props
+
+  return (
+    <Pane display="flex">
+      <InfoGroup
+        heading="Jurisdiction of Incorporation"
+        content={jurisdiction} />
+      <MonthSelectField label="Fiscal Year End" value={yearEndMonth} />
+    </Pane>
+  )
+}
+
 export const CompanyInfoPage = () => {
   return (
     <AppPage
@@ -115,10 +152,14 @@ export const CompanyInfoPage = () => {
       <CompanyInfoBox
         title="Organization Information"
         isEditable={true}
+        renderEdit={<OrganizationInfoEdit
+          jurisdiction="Federal Canadian"
+          yearEndMonth="July"
+        />}
       >
         <OrganizationInfoView
           jurisdiction="Federal Canadian"
-          yearEndMonth="December"
+          yearEndMonth="July"
         />
       </CompanyInfoBox>
       <CompanyInfoBox
@@ -156,7 +197,7 @@ FormattedAddress.defaultProps = {
 }
 
 export const CompanyInfoBox = props => {
-  const { title, isEditable, editLabel, editLinkOverride, children } = props
+  const { title, isEditable, editLabel, editLinkOverride, children, renderEdit } = props
   const [ isEditing, toggleEditing ] = useToggle(false)
   return (
     <Pane padding={majorScale(3)} marginBottom={majorScale(3)} elevation={1}>
@@ -177,7 +218,10 @@ export const CompanyInfoBox = props => {
         }
       </Pane>
       <Pane>
-        {children}
+        {isEditing
+          ? renderEdit
+          : children
+        }
       </Pane>
     </Pane>
   )
