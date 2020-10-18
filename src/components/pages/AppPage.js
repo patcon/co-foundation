@@ -8,7 +8,7 @@ export const AppPage = props => {
       <Pane>
         <Heading size={900} textTransform="uppercase" is="h1">{title}</Heading>
         <Heading is="h5">
-          {byline + ' '}
+          {byline ? byline + ' ' : null}
           {moreLink
             ? <Link target="_blank" href={moreLink}>Read More</Link>
             : null
