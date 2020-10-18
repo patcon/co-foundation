@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Pane, PlusIcon } from 'evergreen-ui'
 import { AppPage } from './AppPage'
-import { HotDogCards } from './OfficersPage'
+import { HotDogCards } from '../HotDogCards'
 
 export const DirectorsPage = () => {
   return (
