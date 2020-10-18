@@ -16,7 +16,7 @@ export const AppPage = props => {
         </Heading>
         <hr style={{ marginTop: majorScale(3) }} />
       </Pane>
-      <Pane paddingTop={majorScale(4)}>
+      <Pane paddingTop={majorScale(4)} paddingBottom={150}>
         {children}
       </Pane>
     </Pane>

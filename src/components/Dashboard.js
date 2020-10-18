@@ -40,7 +40,7 @@ export const Dashboard = props => {
           <SidebarTab paddingLeft={majorScale(4)} fontSize="0.7em">Submenu</SidebarTab>
         </Pane>
       </Tablist>
-      <Pane padding={16} background="tint1" flex="1">
+      <Pane padding={16} flex="1">
         <Switch>
           <Route path={`${path}`} exact>
             <Redirect to={`${path}/${tabs[0].name.toLowerCase()}`} />
