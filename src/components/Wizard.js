@@ -24,6 +24,7 @@ import {
 import { HelpBox } from './HelpBox'
 import { ResultsContainer } from './ResultsContainer'
 import useToggle from '../hooks/useToggle'
+import useInput from '../hooks/useInput'
 
 const WizardStep = props => {
   const {
@@ -61,12 +62,30 @@ const WizardStep = props => {
   )
 }
 
-const EmailNotificationForm = props => {
-  const { type } = props
+const EmailSubscriptionForm = props => {
+  const {
+    country = '',
+    region = ''
+  } = props
   const [ isSubmitted, setIsSubmitted ] = useState(false)
+  const { value:email, bind:bindEmail } = useInput('')
 
-  const handleSubmit = () => {
-    console.log('Subscribed to email type: ' + type)
+  const createSubscription = async (email, country, region) => {
+    try {
+      const res = await fetch('/api/v1/public/notify', {
+        method: 'POST',
+        body: JSON.stringify({ email, country, region }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    createSubscription(email, country, region)
+    console.log(`subscribed ${email} to email type: ${country} ${region}`)
     setIsSubmitted(true)
   }
 
@@ -74,9 +93,9 @@ const EmailNotificationForm = props => {
     return <Paragraph>Thank you! We'll send you an email when we announce expansion into your region.</Paragraph>
   } else {
     return (
-      <form>
-        <EmailInputField />
-        <FakeLoadButton appearance="primary" onComplete={handleSubmit}>Send</FakeLoadButton>
+      <form onSubmit={handleSubmit}>
+        <EmailInputField {...bindEmail} />
+        <Button appearance="primary">Send</Button>
       </form>
     )
   }
@@ -153,7 +172,7 @@ export const Wizard = () => {
         currentStep={currentStep}
         onBack={() => handleGoTo('1-start')}
       >
-        <EmailNotificationForm type="unavailable-usa" />
+        <EmailSubscriptionForm country="usa" />
       </WizardStep>
       <WizardStep
         step="2-pick-province"
@@ -180,7 +199,7 @@ export const Wizard = () => {
         currentStep={currentStep}
         onBack={() => handleGoTo('2-pick-province')}
       >
-        <EmailNotificationForm type="unavailable-canada" />
+        <EmailSubscriptionForm country="canada" region={province} />
       </WizardStep>
       <WizardStep
         step="3-new-or-existing"

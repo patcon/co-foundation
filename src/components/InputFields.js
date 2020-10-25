@@ -2,8 +2,9 @@ import React from 'react'
 import { Select, TextInputField } from 'evergreen-ui'
 import { PROVINCE_DATA } from '../constants'
 
-export const EmailInputField = () => (
+export const EmailInputField = props => (
   <TextInputField
+    {...props}
     label="Email"
     placeholder="me@example.com"
   />

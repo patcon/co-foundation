@@ -6,6 +6,7 @@ const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
 export const formsTable = base('forms')
 export const companiesTable = base('cooperatives')
 export const addressesTable = base('addresses')
+export const notificationsTable = base('notifications')
 
 export const getMinifiedRecord = (record) => {
   if (!record.fields.completed) {
